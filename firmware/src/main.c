@@ -1,8 +1,8 @@
 /*******************************************************************************
-  Main Source File
+  D21 Frequency Measure - Main Source File
 
   Company:
-    Microchip Technology Inc.
+ SupraTech
 
   File Name:
     main.c
@@ -49,15 +49,23 @@ int main ( void )
     // Register the SysTick Interrupt Callback
     SYSTICK_TimerCallbackSet( IncSysTick, (uintptr_t) NULL );
     
+    // Register Capture Callback
+    TC3_CaptureCallbackRegister( FreqCaptureInterrupt, (uintptr_t) NULL );
+    
     // Start the SysTick System timer
     SYSTICK_TimerStart();
     
     // Start the capture timer
     TC3_CaptureStart();
     
+    // Start the PWM test freq
+    TC7_CompareStart();
+    
     // Send 'Hello World'
-    w_i = sprintf((char*)WrBuffer, "Hello World!\r\n");
-    Status = SERCOM3_USART_Write(WrBuffer, w_i );
+    //w_i = sprintf((char*)WrBuffer, "Hello World!\r\n");
+    //Status = SERCOM3_USART_Write(WrBuffer, w_i );
+    printf("Motor Pulse Measurement\r\n");
+    printf("Freq (Hz), Min Period (ms), Max Period (ms)\r\n\r\n");
     
 //    w_i = sprintf((char*)WrBuffer, "Length: %ld\r\n", w_i);
 //    Status = SERCOM3_USART_Write(WrBuffer, w_i );
@@ -67,6 +75,8 @@ int main ( void )
     {
         /* Maintain state machines of all polled MPLAB Harmony modules. */
         SYS_Tasks ( );
+        
+        DoHeartBeat();
     }
 
     /* Execution should not come here during normal operation */

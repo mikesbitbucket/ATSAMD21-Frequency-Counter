@@ -48,6 +48,6 @@
 59,PB30,LED,LED_AL,Digital,Out,High,,,NORMAL
 60,PB31,,Available,,,,,,NORMAL
 61,PB00,FREQIN,EIC_EXTINT0,Digital,High Impedance,n/a,No,No,NORMAL
-62,PB01,,Available,,,,,,NORMAL
+62,PB01,FREQOUT,TC7_WO1,Digital,High Impedance,n/a,No,No,NORMAL
 63,PB02,,Available,,,,,,NORMAL
 64,PB03,,Available,,,,,,NORMAL

@@ -77,6 +77,10 @@
 #define FREQIN_Get()               (((PORT_REGS->GROUP[1].PORT_IN >> 0U)) & 0x01U)
 #define FREQIN_PIN                  PORT_PIN_PB00
 
+/*** Macros for FREQOUT pin ***/
+#define FREQOUT_Get()               (((PORT_REGS->GROUP[1].PORT_IN >> 1U)) & 0x01U)
+#define FREQOUT_PIN                  PORT_PIN_PB01
+
 // *****************************************************************************
 /* PORT Group
 

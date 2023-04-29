@@ -121,7 +121,7 @@ void TC3_CaptureStop( void )
 
 uint32_t TC3_CaptureFrequencyGet( void )
 {
-    return (uint32_t)(999997UL);
+    return (uint32_t)(1999994UL);
 }
 
 void TC3_CaptureCommandSet(TC_COMMAND command)

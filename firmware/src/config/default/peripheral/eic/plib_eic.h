@@ -85,6 +85,21 @@ typedef enum
 } EIC_PIN;
 
 
+typedef void (*EIC_CALLBACK) (uintptr_t context);
+
+typedef struct
+{
+    /* External Interrupt Pin Callback Handler */
+    EIC_CALLBACK    callback;
+
+    /* External Interrupt Pin Client context */
+    uintptr_t       context;
+
+    /* External Interrupt Pin number */
+    EIC_PIN         eicPinNo;
+
+} EIC_CALLBACK_OBJ;
+
 
 // *****************************************************************************
 // *****************************************************************************
@@ -93,6 +108,12 @@ typedef enum
 // *****************************************************************************
 
 void EIC_Initialize(void);
+
+void EIC_InterruptEnable(EIC_PIN pin);
+
+void EIC_InterruptDisable(EIC_PIN pin);
+
+void EIC_CallbackRegister(EIC_PIN pin, EIC_CALLBACK callback, uintptr_t context);
 
 
 
