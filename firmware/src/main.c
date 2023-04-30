@@ -27,11 +27,14 @@
 #include <stdlib.h>                     // Defines EXIT_FAILURE
 #include "definitions.h"                // SYS function prototypes
 #include "misc.h"
+#include "menu.h"
 #include "global_defs.h"
 
 uint32_t w_i;
+uint8_t WrBuffIndex = 0;
 size_t Status;
 uint8_t WrBuffer[32];
+
 
 
 // *****************************************************************************
@@ -77,6 +80,8 @@ int main ( void )
         SYS_Tasks ( );
         
         DoHeartBeat();
+        
+        DoMenu();
     }
 
     /* Execution should not come here during normal operation */

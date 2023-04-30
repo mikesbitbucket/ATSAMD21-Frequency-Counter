@@ -63,10 +63,14 @@ static uint32_t MySysTick = 0;
 static uint32_t Heartbeat_tmr = 0;
 static uint32_t SerialUpdate_tmr = 0;
 
+static uint8_t BufCount = 0;
+    
+    
 //static uint8_t LED_Heartbeat_tmr;
 
-
+static uint16_t MinPer = 0xffff, MaxPer = 0;  // holds min and max period for each cycle
 static bool WindowFlag = false;
+static bool fDataCollection = false;
 
 //
 //enum FlashStates
@@ -249,16 +253,45 @@ void DoHeartBeat()
         
 }  // end heartbeat
     
+/*
+ * Toggles the data collection
+ * */
+void StartStopCapture(void)
+{
+    if(fDataCollection)
+    {
+        fDataCollection = false;
+    }
+    else
+    {
+        fDataCollection = true;
+        BufCount = 0;
+        WindowFlag = false; // set back to false
+        MinPer = 0xffff;  // reset min and max variables
+        MaxPer = 0;
+        SerialUpdate_tmr = GetSysTick();  // get new time val - reset so we get a whole period
+    }
+}  // end toggle data collection
+
+
+/****************************************************************
+This is where the magic of capturing period and frequency happens
+ * 
+ * 
+ * 
+ * 
+ ****************************************************************
+*/
+
+
 void FreqCaptureInterrupt( TC_CAPTURE_STATUS status, uintptr_t context )
 {
     uint8_t i;
     int int_i;
-    static uint8_t BufCount = 0;
-    uint32_t PeriodSum, PulseSum;
     float PeriodAverage, PulseAverage, Freq;
     float TimeMaxPer, TimeMinPer;
+    uint32_t PeriodSum, PulseSum;
     static uint16_t PeriodBuf[256], PulseBuf[256];
-    static uint16_t MinPer = 0xffff, MaxPer = 0;  // holds min and max period for each cycle
     uint8_t WrBuffer[32];
     
     // Check Status Flags??
@@ -280,7 +313,7 @@ void FreqCaptureInterrupt( TC_CAPTURE_STATUS status, uintptr_t context )
         if(PeriodBuf[BufCount] > MaxPer) MaxPer = PeriodBuf[BufCount];
         BufCount++;
 
-        if(WindowFlag == true)
+        if((WindowFlag == true) && (fDataCollection == true))
         {
             // Time to send out new data
 

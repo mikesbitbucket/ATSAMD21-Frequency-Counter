@@ -4677,7 +4677,9 @@
          <key class="com.microchip.mcc.core.tokenManager.CustomKey" moduleName="stdio" name="STDIN_BUFF_MODE"/>
          <value>&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?&gt;&lt;stdio&gt;
   &lt;stdio dnOrder=&quot;0&quot; id=&quot;STDIN_BUFF_MODE&quot;&gt;
-    &lt;Values dnOrder=&quot;0&quot;/&gt;
+    &lt;Values dnOrder=&quot;0&quot;&gt;
+      &lt;User dnOrder=&quot;0&quot; value=&quot;false&quot;/&gt;
+    &lt;/Values&gt;
   &lt;/stdio&gt;
 &lt;/stdio&gt;
 </value>
@@ -6180,7 +6182,7 @@
       </entry>
       <entry>
          <file>..\src\config\default\initialization.c</file>
-         <hash>6f00e93e4348fc44e42d92552550cb9b3bd159011b26230655fa71e64a30d12d</hash>
+         <hash>e852cb143d9d028b486125da5d22930db45991a251ae06cb28d71b6c29c81d6d</hash>
       </entry>
       <entry>
          <file>..\src\packs\CMSIS\CMSIS\Core\Include\cmsis_compiler.h</file>
@@ -6432,7 +6434,7 @@
       </entry>
       <entry>
          <file>..\src\config\default\definitions.h</file>
-         <hash>05b4684f29bc1866b41d7676c7bd29400fd8e290098d08481ed805efc26e47d4</hash>
+         <hash>e6769ff3b9edb5e8f2286143b52f1e30abfa33163c566e75e79ff6cf8cc97629</hash>
       </entry>
       <entry>
          <file>..\src\config\default\ATSAMD21J18A.ld</file>

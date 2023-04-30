@@ -51,6 +51,7 @@ void IncSysTick ( uintptr_t context );
 void ClearSysTick(void);
 uint32_t GetSysTick(void);
 void DoHeartBeat(void);
+void StartStopCapture(void);
 void FreqCaptureInterrupt( TC_CAPTURE_STATUS status, uintptr_t context );
 
 

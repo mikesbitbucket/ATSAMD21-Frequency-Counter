@@ -157,9 +157,9 @@ void SYS_Initialize ( void* data )
 
 
 
-    SERCOM3_USART_Initialize();
-
     TC7_CompareInitialize();
+
+    SERCOM3_USART_Initialize();
 
 	BSP_Initialize();
     NVMCTRL_Initialize( );
