@@ -31,7 +31,7 @@ extern "C" {
 
     
 #define HEARTBEAT_INTERVAL  (0.01)  // seconds for interrupt from systick timer
-#define LED_HEARTBEAT_INTERVAL 20  // Interval for heartbeat tick - 50 = 500ms @ 10ms tick
+#define LED_HEARTBEAT_INTERVAL 50  // Interval for heartbeat tick - 50 = 500ms @ 10ms tick
 #define SERIAL_UPDATE_INTERVAL 20  // 10ms ticks. Time between serial output updates
 
 
