@@ -108,25 +108,6 @@
 // *****************************************************************************
 // *****************************************************************************
 
-/*******************************************************************************
-  Function:
-    void STDIO_BufferModeSet ( void )
-
-  Summary:
-    Sets the buffering mode for stdin and stdout
-
-  Remarks:
- ********************************************************************************/
-static void STDIO_BufferModeSet(void)
-{
-    /* MISRAC 2012 deviation block start */
-    /* MISRA C-2012 Rule 21.6 deviated 1 times in this file.  Deviation record ID -  H3_MISRAC_2012_R_21_6_DR_3 */
-
-    /* Make stdin unbuffered */
-    setbuf(stdin, NULL);
-}
-
-
 
 
 /*******************************************************************************
@@ -146,9 +127,6 @@ void SYS_Initialize ( void* data )
 
     NVMCTRL_REGS->NVMCTRL_CTRLB = NVMCTRL_CTRLB_RWS(3UL);
 
-    STDIO_BufferModeSet();
-
-
   
     PORT_Initialize();
 
@@ -157,12 +135,14 @@ void SYS_Initialize ( void* data )
 
 
 
-    TC7_CompareInitialize();
-
+	BSP_Initialize();
     SERCOM3_USART_Initialize();
 
-	BSP_Initialize();
+    TC7_CompareInitialize();
+
     NVMCTRL_Initialize( );
+
+    TCC0_CaptureInitialize();
 
     EVSYS_Initialize();
 

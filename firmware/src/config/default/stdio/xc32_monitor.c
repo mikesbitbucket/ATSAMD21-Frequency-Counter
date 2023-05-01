@@ -1,6 +1,8 @@
 /*******************************************************************************
  Debug Console Source file
-
+ * I wrote this to override the normal printf output and send it to the SERCOM3
+ * I am not using the STDIO for read input.
+ * 
   Company:
     Microchip Technology Inc.
 
@@ -46,17 +48,7 @@ extern int write(int handle, void * buffer, size_t count);
 
 int read(int handle, void *buffer, unsigned int len)
 {
-    int nChars = 0;
-    bool success = false;
-    if ((handle == 0)  && (len > 0U))
-    {
-        do
-        {
-            success = SERCOM3_USART_Read(buffer, 1);
-        }while( !success);
-        nChars = 1;
-    }
-    return nChars;
+   return -1;
 }
 
 int write(int handle, void * buffer, size_t count)
@@ -70,4 +62,5 @@ int write(int handle, void * buffer, size_t count)
        }while( !success);
    }
    return (int)count;
+   //return -1;
 }

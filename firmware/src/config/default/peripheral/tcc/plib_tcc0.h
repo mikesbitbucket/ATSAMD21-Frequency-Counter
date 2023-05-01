@@ -1,24 +1,26 @@
 /*******************************************************************************
-  SERCOM Universal Synchronous/Asynchrnous Receiver/Transmitter PLIB
+  Timer/Counter(TCC0) PLIB
 
   Company
     Microchip Technology Inc.
 
   File Name
-    plib_sercom3_usart.h
+    plib_tcc0.h
 
   Summary
-    USART peripheral library interface.
+    TCC0 PLIB Header File.
 
   Description
-    This file defines the interface to the USART peripheral library. This
+    This file defines the interface to the TCC peripheral library. This
     library provides access to and control of the associated peripheral
     instance.
 
   Remarks:
     None.
+
 *******************************************************************************/
 
+// DOM-IGNORE-BEGIN
 /*******************************************************************************
 * Copyright (C) 2018 Microchip Technology Inc. and its subsidiaries.
 *
@@ -41,20 +43,24 @@
 * ANY WAY RELATED TO THIS SOFTWARE WILL NOT EXCEED THE AMOUNT OF FEES, IF ANY,
 * THAT YOU HAVE PAID DIRECTLY TO MICROCHIP FOR THIS SOFTWARE.
 *******************************************************************************/
+// DOM-IGNORE-END
 
-#ifndef PLIB_SERCOM3_USART_H // Guards against multiple inclusion
-#define PLIB_SERCOM3_USART_H
+#ifndef PLIB_TCC0_H       // Guards against multiple inclusion
+#define PLIB_TCC0_H
 
 // *****************************************************************************
 // *****************************************************************************
 // Section: Included Files
 // *****************************************************************************
 // *****************************************************************************
+/* This section lists the other files that are included in this file.
+*/
 
-#include "plib_sercom_usart_common.h"
+#include "device.h"
+#include "plib_tcc_common.h"
 
 // DOM-IGNORE-BEGIN
-#ifdef __cplusplus // Provide C++ Compatibility
+#ifdef __cplusplus // Provide C Compatibility
 
     extern "C" {
 
@@ -63,50 +69,68 @@
 
 // *****************************************************************************
 // *****************************************************************************
+// Section: Data Types
+// *****************************************************************************
+// *****************************************************************************
+/* The following data type definitions are used by the functions in this
+    interface and should be considered part it.
+*/
+
+/* TCC Channel numbers
+
+   Summary:
+    Identifies channel number within TCC module
+
+   Description:
+    This enumeration identifies TCC channel number.
+
+   Remarks:
+    None.
+*/
+typedef enum
+{
+    TCC0_CHANNEL0,
+    TCC0_CHANNEL1,
+    TCC0_CHANNEL2,
+    TCC0_CHANNEL3,
+}TCC0_CHANNEL_NUM;
+
+typedef enum
+{
+    TCC0_CAPTURE_STATUS_OVF = TCC_INTFLAG_OVF_Msk,
+    TCC0_CAPTURE_STATUS_ERR = TCC_INTFLAG_ERR_Msk,
+    TCC0_CAPTURE_STATUS_MC_0 = TCC_INTFLAG_MC0_Msk,
+    TCC0_CAPTURE_STATUS_MC_1 = TCC_INTFLAG_MC1_Msk,
+    TCC0_CAPTURE_STATUS_MC_2 = TCC_INTFLAG_MC2_Msk,
+    TCC0_CAPTURE_STATUS_MC_3 = TCC_INTFLAG_MC3_Msk,
+}TCC0_CAPTURE_STATUS;
+
+// *****************************************************************************
+// *****************************************************************************
 // Section: Interface Routines
 // *****************************************************************************
 // *****************************************************************************
-
-void SERCOM3_USART_Initialize( void );
-
-bool SERCOM3_USART_SerialSetup( USART_SERIAL_SETUP * serialSetup, uint32_t clkFrequency );
-
-USART_ERROR SERCOM3_USART_ErrorGet( void );
-
-uint32_t SERCOM3_USART_FrequencyGet( void );
+/* The following functions make up the methods (set of possible operations) of
+   this interface.
+*/
 
 
-bool SERCOM3_USART_TransmitComplete( void );
+void TCC0_CaptureInitialize ( void );
 
-size_t SERCOM3_USART_Write(uint8_t* pWrBuffer, const size_t size );
+void TCC0_CaptureStart ( void );
 
-size_t SERCOM3_USART_WriteCountGet(void);
+void TCC0_CaptureStop ( void );
 
-size_t SERCOM3_USART_WriteFreeBufferCountGet(void);
+uint32_t TCC0_CaptureFrequencyGet( void );
 
-size_t SERCOM3_USART_WriteBufferSizeGet(void);
-
-bool SERCOM3_USART_WriteNotificationEnable(bool isEnabled, bool isPersistent);
-
-void SERCOM3_USART_WriteThresholdSet(uint32_t nBytesThreshold);
-
-void SERCOM3_USART_WriteCallbackRegister( SERCOM_USART_RING_BUFFER_CALLBACK callback, uintptr_t context);
+uint32_t TCC0_Capture24bitValueGet( TCC0_CHANNEL_NUM channel );
+uint32_t TCC0_Capture24bitCounterGet( void );
 
 
+void TCC0_CaptureCommandSet(TCC_COMMAND command);
 
-size_t SERCOM3_USART_Read(uint8_t* pRdBuffer, const size_t size);
+void TCC0_CaptureCallbackRegister( TCC_CALLBACK callback, uintptr_t context );
 
-size_t SERCOM3_USART_ReadCountGet(void);
-
-size_t SERCOM3_USART_ReadFreeBufferCountGet(void);
-
-size_t SERCOM3_USART_ReadBufferSizeGet(void);
-
-bool SERCOM3_USART_ReadNotificationEnable(bool isEnabled, bool isPersistent);
-
-void SERCOM3_USART_ReadThresholdSet(uint32_t nBytesThreshold);
-
-void SERCOM3_USART_ReadCallbackRegister( SERCOM_USART_RING_BUFFER_CALLBACK callback, uintptr_t context);
 
 // DOM-IGNORE-BEGIN
 #ifdef __cplusplus  // Provide C++ Compatibility
@@ -116,4 +140,4 @@ void SERCOM3_USART_ReadCallbackRegister( SERCOM_USART_RING_BUFFER_CALLBACK callb
 #endif
 // DOM-IGNORE-END
 
-#endif //PLIB_SERCOM3_USART_H
+#endif /* PLIB_TCC0_H */

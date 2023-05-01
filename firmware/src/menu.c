@@ -3,10 +3,10 @@
 
  * Menu system for the serial port
   @Company
-    Company Name
+    SuprTech
 
   @File Name
-    filename.c
+    menu.c
 
   @Summary
     Brief description of the file.
@@ -152,7 +152,7 @@ void DoMenu(void)
     static uint8_t RdBuffer[32];
     static uint8_t Index = 0;
     
-    if(SERCOM3_USART_ReceiverIsReady())
+    if(SERCOM3_USART_ReadCountGet())
     {
         SERCOM3_USART_Read(&RdBuffer[Index], 1 );  // Read a byte
         if((RdBuffer[Index] >= 0x20) && (RdBuffer[Index] <= 0x7a))  // Ignore CR LF

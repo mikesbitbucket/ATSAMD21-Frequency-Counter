@@ -55,11 +55,17 @@ int main ( void )
     // Register Capture Callback
     TC3_CaptureCallbackRegister( FreqCaptureInterrupt, (uintptr_t) NULL );
     
+    // Register 24bit Callback
+    TCC0_CaptureCallbackRegister(Freq24BitInterrupt, (uintptr_t) NULL );
+    
     // Start the SysTick System timer
     SYSTICK_TimerStart();
     
     // Start the capture timer
-    TC3_CaptureStart();
+    //TC3_CaptureStart();
+    
+    // Start the 24bit capture timer
+    TCC0_CaptureStart();
     
     // Start the PWM test freq
     TC7_CompareStart();
@@ -67,8 +73,11 @@ int main ( void )
     // Send 'Hello World'
     //w_i = sprintf((char*)WrBuffer, "Hello World!\r\n");
     //Status = SERCOM3_USART_Write(WrBuffer, w_i );
+    printf("\r\nMenu Commands:\r\n");
+    printf("s - Start / Stop the data collection\r\n");
+    printf("? - This command - prints menu\r\n\r\n");
     printf("Motor Pulse Measurement\r\n");
-    printf("Freq (Hz), Min Period (ms), Max Period (ms)\r\n\r\n");
+    printf("Time(Secs), Freq (Hz), Min Period (ms), Max Period (ms), Average Period Count\r\n\r\n");
     
 //    w_i = sprintf((char*)WrBuffer, "Length: %ld\r\n", w_i);
 //    Status = SERCOM3_USART_Write(WrBuffer, w_i );

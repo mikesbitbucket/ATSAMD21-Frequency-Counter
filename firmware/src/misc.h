@@ -53,6 +53,7 @@ uint32_t GetSysTick(void);
 void DoHeartBeat(void);
 void StartStopCapture(void);
 void FreqCaptureInterrupt( TC_CAPTURE_STATUS status, uintptr_t context );
+void Freq24BitInterrupt(uint32_t status, uintptr_t context);
 
 
 #ifdef	__cplusplus

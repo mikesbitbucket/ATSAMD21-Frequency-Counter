@@ -68,9 +68,10 @@ static uint8_t BufCount = 0;
     
 //static uint8_t LED_Heartbeat_tmr;
 
-static uint16_t MinPer = 0xffff, MaxPer = 0;  // holds min and max period for each cycle
+static uint32_t MinPer = 0xffffff, MaxPer = 0;  // holds min and max period for each cycle
 static bool WindowFlag = false;
 static bool fDataCollection = false;
+uint32_t TimeStart; // ticks since start of acquisition
 
 //
 //enum FlashStates
@@ -267,9 +268,10 @@ void StartStopCapture(void)
         fDataCollection = true;
         BufCount = 0;
         WindowFlag = false; // set back to false
-        MinPer = 0xffff;  // reset min and max variables
+        MinPer = 0xffffff;  // reset min and max variables
         MaxPer = 0;
         SerialUpdate_tmr = GetSysTick();  // get new time val - reset so we get a whole period
+        TimeStart = GetSysTick(); // start time stamp timer over
     }
 }  // end toggle data collection
 
@@ -331,7 +333,7 @@ void FreqCaptureInterrupt( TC_CAPTURE_STATUS status, uintptr_t context )
             TimeMinPer = (float)(MinPer) / TC3_CaptureFrequencyGet() * 1000UL;
             TimeMaxPer = (float)(MaxPer) / TC3_CaptureFrequencyGet() * 1000UL;
             //printf("Freq: %.3f Min: %.3f Max %.3f", Freq, TimeMinPer, TimeMaxPer);
-            printf("%.3f,%.3f,%.3f", Freq, TimeMinPer, TimeMaxPer);  // no test on what each is
+            printf("%.3f,%.3f,%.3f,%.0f", Freq, TimeMinPer, TimeMaxPer, PeriodAverage);  // no test on what each is
             //printf(" Count: %ld", PeriodSum);
             printf("\r\n");
             
@@ -342,7 +344,7 @@ void FreqCaptureInterrupt( TC_CAPTURE_STATUS status, uintptr_t context )
             // Reset all the variables
             BufCount = 0;
             WindowFlag = false; // set back to false
-            MinPer = 0xffff;  // reset min and max variables
+            MinPer = 0xffffff;  // reset min and max variables
             MaxPer = 0;
 
         }
@@ -352,8 +354,69 @@ void FreqCaptureInterrupt( TC_CAPTURE_STATUS status, uintptr_t context )
         // Not good capture - do something with the errors??
         TC3_REGS->COUNT16.TC_INTFLAG = 0xff; // Clear flags for now... Should not get here....
     }
-
+(void)PulseAverage; // Never used but don't want error right now
 }
+
+void Freq24BitInterrupt(uint32_t status, uintptr_t context)
+{
+//    int32_t Period24, PulseWidth24;
+//    Period24 = TCC0_Capture24bitValueGet( TCC0_CHANNEL0 );
+//    PulseWidth24 = TCC0_Capture24bitValueGet( TCC0_CHANNEL1 );
+//    printf("%ld, %ld\r\n", Period24, PulseWidth24);
+    
+    uint8_t i;
+    int int_i;
+    float PeriodAverage, PulseAverage, Freq;
+    float TimeMaxPer, TimeMinPer;
+    uint32_t PeriodSum, PulseSum;
+    static uint32_t PeriodBuf[256], PulseBuf[256];
+    float Time;
+    
+
+
+    // We got a new period, get the period and duty cycle
+    PulseBuf[BufCount] = TCC0_Capture24bitValueGet( TCC0_CHANNEL0 );  // Pulse width count
+    PeriodBuf[BufCount] = TCC0_Capture24bitValueGet( TCC0_CHANNEL1 );  // This is the period count
+    if(PeriodBuf[BufCount] < MinPer) MinPer = PeriodBuf[BufCount];
+    if(PeriodBuf[BufCount] > MaxPer) MaxPer = PeriodBuf[BufCount];
+    BufCount++;
+
+    if((WindowFlag == true) && (fDataCollection == true))
+    {
+        // Time to send out new data
+
+        // Get new averages
+        PeriodSum = 0; PulseSum = 0;
+        for(i=0; i < BufCount; i++)
+        {
+            PeriodSum += PeriodBuf[i];
+            PulseSum += PulseBuf[i];
+        }
+        PeriodAverage = (float)(PeriodSum)/i;
+        PulseAverage = (float)(PulseSum)/i;
+
+        Freq = (TCC0_CaptureFrequencyGet() / PeriodAverage);
+        TimeMinPer = (float)(MinPer) / TCC0_CaptureFrequencyGet() * 1000UL;
+        TimeMaxPer = (float)(MaxPer) / TCC0_CaptureFrequencyGet() * 1000UL;
+        Time = (GetSysTick() - TimeStart) * 0.01;
+        //printf("Freq: %.3f Min: %.3f Max %.3f", Freq, TimeMinPer, TimeMaxPer);
+        printf("%.3f,%.3f,%.3f,%.3f,%.0f", Time, Freq, TimeMinPer, TimeMaxPer, PeriodAverage);  // no test on what each is
+        //printf(" Count: %ld", PeriodSum);
+        printf("\r\n");
+
+        //printf("PerAve: %.2f PulAve: %.2f\r\n", PeriodAverage, PulseAverage);
+        //int_i = sprintf((char*)WrBuffer, "PerAve: %.2f PulAve: %.2f\r\n", PeriodAverage, PulseAverage);
+        //i = SERCOM3_USART_Write(WrBuffer, int_i );
+
+        // Reset all the variables
+        BufCount = 0;
+        WindowFlag = false; // set back to false
+        MinPer = 0xffffff;  // reset min and max variables
+        MaxPer = 0;
+
+    }
+    (void)PulseAverage; // Never used but don't want error right now
+} // End interrupt with 24bit capture
 
 
 /* *****************************************************************************
