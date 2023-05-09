@@ -151,6 +151,7 @@ void DoMenu(void)
 {
     static uint8_t RdBuffer[32];
     static uint8_t Index = 0;
+    static bool PWM_Status = false;
     
     if(SERCOM3_USART_ReadCountGet())
     {
@@ -168,11 +169,29 @@ void DoMenu(void)
                     break;
                 } // End start stop collection
                 
+                case 'p':
+                case 'P':
+                {
+                    // start and stop the onboard PWM generator
+                    if(PWM_Status == true)
+                    {
+                        TC7_CompareStop();
+                        PWM_Status = false;
+                    }
+                    else
+                    {
+                        TC7_CompareStart();
+                        PWM_Status = true;
+                    }
+                    break;
+                } // end case P
+                
                 case '?':
                 {
                     // Print out the menu
                     printf("\r\nMenu Commands:\r\n");
                     printf("s - Start / Stop the data collection\r\n");
+                    printf("p - PWM start/stop\r\n");
                     printf("? - This command - prints menu\r\n");
                     break;
                 } // end ? - Print out menu

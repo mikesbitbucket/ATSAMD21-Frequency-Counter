@@ -64,13 +64,15 @@ int main ( void )
     TCC0_CaptureStart();
     
     // Start the PWM test freq
-    TC7_CompareStart();
+    //TC7_CompareStart();
     
     // Send 'Hello World'
     //w_i = sprintf((char*)WrBuffer, "Hello World!\r\n");
     //Status = SERCOM3_USART_Write(WrBuffer, w_i );
     printf("\r\nMenu Commands:\r\n");
+    printf("\r\nMenu Commands:\r\n");
     printf("s - Start / Stop the data collection\r\n");
+    printf("p - PWM start/stop\r\n");
     printf("? - This command - prints menu\r\n\r\n");
     printf("Motor Pulse Measurement\r\n");
     printf("Time(Secs), Freq (Hz), Min Period (ms), Max Period (ms), Average Period Count\r\n\r\n");
